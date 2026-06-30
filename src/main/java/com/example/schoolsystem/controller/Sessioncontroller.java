@@ -1,0 +1,24 @@
+package com.example.schoolsystem.controller;
+
+
+import com.example.schoolsystem.entity.Session;
+import com.example.schoolsystem.service.Sessionservice;
+import com.example.schoolsystem.payload.ApiResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/v1/session")
+@RequiredArgsConstructor
+public class Sessioncontroller {
+
+    private final Sessionservice sessionservice;
+
+    @PostMapping("/save")
+    public ResponseEntity<ApiResponse> saveSession(@RequestBody Session session) throws Exception {
+        sessionservice.Savesession(session);
+        return new ResponseEntity<>(new ApiResponse(true, "session saved", null), HttpStatus.CREATED);
+    }
+}
