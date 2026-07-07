@@ -29,6 +29,7 @@ public class Teacherservice {
         if(userrepo.existsUserByEmail(teacher.getEmail())){
             return ResponseEntity.ok("Teacher is already register");
         }
+        System.out.println("teacher name is present" + teacher.getFullName());
         User user = new User();
         user.setUsername(teacher.getFullName());
         user.setEmail(teacher.getEmail());

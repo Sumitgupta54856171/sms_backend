@@ -1,13 +1,18 @@
 package com.example.schoolsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+@Data
 @Entity
 @Table(name = "students")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Student {
 
     @Id
@@ -20,18 +25,8 @@ public class Student {
     @Column(unique = true, nullable = false, length = 100)
     private String email;
 
-    // 'class' is a reserved keyword in Java, so we use 'studentClass'
-    @Column(name = "class_name", nullable = false, length = 20)
-    private String studentClass;
-
-    @Column(nullable = false, length = 10)
-    private String section;
-
-    @Column(nullable = false, length = 20)
-    private String rollNo;
-
     @Column(unique = true, nullable = false, length = 50)
-    private String scholarNo;
+    private String scholar_no;
 
     @Column(length = 9)
     private String sssmid;
@@ -57,8 +52,10 @@ public class Student {
     @Column(nullable = false, length = 100)
     private String mother_name;
 
-    @Column(length = 20)
-    private Status status = Status.active; // active or inactive
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private Status status;
 
     @CreationTimestamp
     @Column(updatable = false)

@@ -25,7 +25,7 @@ public class UserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
 
-            User user = userrepo.findByemail(email);
+            User user = userrepo.findByEmail(email);
 
             if(user == null){
                 throw new UsernameNotFoundException("User not found with email: " + email);
@@ -40,10 +40,6 @@ public class UserDetailService implements UserDetailsService {
                     user.getPassword(),
                     Collections.singletonList(new SimpleGrantedAuthority(roleName))
             );
-
-
-
-
 
     }
 }

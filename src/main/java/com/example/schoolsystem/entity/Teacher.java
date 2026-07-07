@@ -2,6 +2,7 @@ package com.example.schoolsystem.entity;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -9,13 +10,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.stereotype.Component;
 
 
 @Getter
 @Setter
 @Entity
 @Table(name = "teachers")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Teacher {
 
     @Id
@@ -46,7 +47,6 @@ public class Teacher {
 
     @Column(length = 9)
     private String sssmid;
-
 
     private Status status; // active or inactive
 

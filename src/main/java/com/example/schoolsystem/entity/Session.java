@@ -1,6 +1,7 @@
 package com.example.schoolsystem.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,10 +18,11 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name="Session")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Session {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long session_id;
+    private Long sessionId;
     private String session_name;
     private String session_start_date;
     private String session_end_date;
@@ -29,5 +31,5 @@ public class Session {
     private String description;
     @CreationTimestamp
     @Column(updatable = false, name = "created_date")
-    private LocalDate created_at;
+    private LocalDate createdAt;
 }

@@ -3,6 +3,7 @@ package com.example.schoolsystem.controller;
 
 import com.example.schoolsystem.dto.LoginRequest;
 import com.example.schoolsystem.service.Userservice;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,8 +22,8 @@ public class Authcontroller {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest ) throws Exception{
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest,HttpServletResponse response ) throws Exception{
 
-        return userservice.login(loginRequest);
+        return userservice.login(loginRequest,response);
     }
 }
