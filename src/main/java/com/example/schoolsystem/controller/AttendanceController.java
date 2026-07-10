@@ -27,9 +27,10 @@ public class AttendanceController {
     }
 
     @GetMapping("/date/{date}")
-    public ResponseEntity<?> getAllAttendance(@PathVariable("date") LocalDate date)
+    public ResponseEntity<?> getAllAttendance(@PathVariable("date") LocalDate date, @CookieValue(value = "sessionId",required = false) String sessionId)
     {
-        return attendanceService.getAllAttendance(date);
+        Long id = Long.parseLong(sessionId);
+        return attendanceService.getAllAttendance(date,id);
     }
 
     @PutMapping("/{studentId}/{status}/{date}")

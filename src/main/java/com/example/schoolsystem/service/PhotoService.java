@@ -5,8 +5,11 @@ import com.example.schoolsystem.entity.Photo;
 import com.example.schoolsystem.repository.PhotorRepo;
 import com.example.schoolsystem.repository.Studentrepo;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -86,5 +89,17 @@ public class PhotoService {
         } catch (IOException e) {
             throw new RuntimeException("Failed to store file: " + e.getMessage(), e);
         }
+    }
+    @Transactional
+    public ResponseEntity<?> deletphot(Long studentId){
+        System.out.println("delete photo start");
+        photorRepo.deleteByStudent_Id(studentId);
+        return ResponseEntity.ok("delete photo");
+    }
+    @Transactional
+    public ResponseEntity<?> update(Photo photo){
+        photorRepo.deleteByStudent_Id(photo.getStudent().getId());
+        photorRepo.save(photo);
+        return ResponseEntity.ok("successfully update");
     }
 }

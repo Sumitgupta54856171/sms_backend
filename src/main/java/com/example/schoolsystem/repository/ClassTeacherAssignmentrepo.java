@@ -27,8 +27,8 @@ public interface ClassTeacherAssignmentrepo extends JpaRepository<ClassTeacherAs
             @Param("teacherId") Long teacherId,
             @Param("sessionId") Long sessionId
     );
-    @Query("SELECT c FROM ClassTeacherAssignment c WHERE c.gradeClass = :gradeClass")
-    ClassTeacherAssignment findByGradeClass(String gradeClass);
+    @Query("SELECT c FROM ClassTeacherAssignment c WHERE c.gradeClass = :gradeClass and c.sessionId= :sessionId")
+    ClassTeacherAssignment findByGradeClass(String gradeClass,Long sessionId);
 
     boolean existsByGradeClassAndSessionId(String gradeClass, Long sessionId);
 }

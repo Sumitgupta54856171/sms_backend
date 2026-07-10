@@ -9,11 +9,13 @@ public class StudentClassResponse {
     private String StudentName;
 
     private String scholarNo;
-    public StudentClassResponse(String className, String rolleNo, String StudentName,   String scholarNo) {
+    private Long studentId;
+    public StudentClassResponse(String className, String rolleNo, String StudentName,   String scholarNo,Long studentId) {
         this.className = className;
         this.rolleNo = rolleNo;
         this.StudentName = StudentName;
         this.scholarNo = scholarNo;
+        this.studentId = studentId;
     }
 
 

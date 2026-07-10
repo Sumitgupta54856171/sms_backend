@@ -70,8 +70,9 @@ public class Studentdto {
     private String class_no;
 
     private Long total_fees;
-
-    // Optional timestamps for response
+    private String apaarId;
+    private String penId;
+    private String address;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

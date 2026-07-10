@@ -1,5 +1,6 @@
 package com.example.schoolsystem.repository;
 
+import com.example.schoolsystem.entity.Enrollement_session;
 import com.example.schoolsystem.entity.Session;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,4 +19,8 @@ public interface Sessionrepo extends JpaRepository<Session,Long> {
     @Query("SELECT CASE WHEN COUNT(s) > 0 THEN true ELSE false END FROM Session s WHERE s.is_active = :is_active")
     boolean existsByIs_Active(boolean is_active);
 
+    @Query("SELECT s FROM Session s WHERE s.is_current = :b")
+    Optional<Session> findByIs_currentIsTrue(@org.springframework.data.repository.query.Param("b") boolean b);
+
+    Enrollement_session findBysessionId(Long sessionId);
 }

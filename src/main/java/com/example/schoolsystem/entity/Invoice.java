@@ -29,20 +29,15 @@ public class Invoice {
 
     private String paymentMethod;
 
+
     private Long scholar_no;
     private  String class_no;
     @Transient
     @JsonProperty("enrollment_id")
     private Long enrollement_id;
-
-
     private Long amount;
     private String paymentType;
     private String remarks;
-
-
-
-
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

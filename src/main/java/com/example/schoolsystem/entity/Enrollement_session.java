@@ -4,6 +4,7 @@ package com.example.schoolsystem.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,11 +26,11 @@ public class Enrollement_session {
     @JsonProperty("studentId")
     private Long studentId;
     @ManyToOne
-    @JoinColumn(name = "sessionIdInEnrollment")
+    @JoinColumn(name = "session_id_in_enrollment")
     private Session session;
 
     @Transient
-    @JsonProperty("sessionIdInEnrollment")
+    @JsonProperty("session_id_in_enrollment")
     private Long sessionIdInEnrollment;
 
     @Column(name="class_no")
@@ -39,6 +40,10 @@ public class Enrollement_session {
 
     private Long total_fees;
 
+    @Column(nullable = false, columnDefinition = "bigint default 0")
+    private Long dueFees = 0L;
 
+    @Column(nullable = false, columnDefinition = "bigint default 0")
+    private Long discountFees = 0L;
 
 }

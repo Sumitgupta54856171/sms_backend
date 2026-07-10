@@ -22,7 +22,7 @@ public class Student {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(unique = true, nullable = false, length = 100)
+    @Column(unique = true, length = 100)
     private String email;
 
     @Column(unique = true, nullable = false, length = 50)
@@ -43,19 +43,22 @@ public class Student {
     @Column(nullable = false)
     private LocalDate dob;
 
-    @Column(nullable = false, length = 15)
+    @Column( length = 15)
     private String phone;
 
-    @Column(nullable = false, length = 100)
+    @Column( length = 100)
     private String father_name;
 
-    @Column(nullable = false, length = 100)
+    @Column( length = 100)
     private String mother_name;
 
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
+    private String apaarId;
+    private String penId;
+    private String address;
 
     @CreationTimestamp
     @Column(updatable = false)

@@ -2,6 +2,7 @@ package com.example.schoolsystem.config;
 
 
 import com.example.schoolsystem.service.UserDetailService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,10 +52,17 @@ public class Securityconfig {
                         .requestMatchers("/uploads/**").permitAll()
                         .anyRequest().authenticated()
                 )
+
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .httpBasic(withDefaults())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setContentType("application/json");
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"Token is missing or expired\"}");
+                        }));
                 return http.build();
     }
 
@@ -76,7 +84,7 @@ public class Securityconfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:5173","http://localhost:5174"));
+        corsConfiguration.setAllowedOrigins(Arrays.asList("http://83.228.225.254:5173","http://localhost:5173"));
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setAllowedMethods(Arrays.asList("*"));
         corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));

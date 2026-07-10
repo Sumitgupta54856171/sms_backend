@@ -57,7 +57,7 @@ public class AttendanceService {
                 return ResponseEntity.badRequest().body("Invalid attendance status: " + request.getStatus());
             }
 
-            at.setEnrollementId(enrollementrepo.findByStudent_IdAndSession_Id(request.getStudentId(), sessionId));
+            at.setEnrollementId(enrollementrepo.findByStudent_IdAndSession_SessionId(request.getStudentId(), sessionId));
             at.setGrade(request.getGrade());
             at.setStudentId(request.getStudentId());
             at.setAttendanceDate(request.getAttendanceDate() != null ? request.getAttendanceDate() : LocalDate.now());
@@ -67,14 +67,13 @@ public class AttendanceService {
         return ResponseEntity.ok("All attendance records saved successfully");
     }
 
-    public ResponseEntity<?> getAllAttendance(LocalDate date) {
-        List<Attendance> attendanceList = attendanceRepository.findByAttendanceDate(date);
+    public ResponseEntity<?> getAllAttendance(LocalDate date,Long sessionId) {
+        List<Attendance> attendanceList = attendanceRepository.findAllByAttendanceDateAndEnrollementId_Session_SessionId(date,sessionId);
         List<AttendanceResponseDTO> response = attendanceList.stream()
                 .map(AttendanceResponseDTO::new)
                 .toList();
         return ResponseEntity.ok(response);
     }
-
     public ResponseEntity<?> editingAttendance(Long studentId, LocalDate date, String status) {
         List<Attendance> at = attendanceRepository.findByAttendanceDate(date);
         boolean found = false;

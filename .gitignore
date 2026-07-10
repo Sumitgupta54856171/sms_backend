@@ -80,3 +80,6 @@ jacoco.exec
 
 ### Docker ###
 .dockerignore
+
+### Uploads ###
+uploads/
