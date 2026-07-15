@@ -3,11 +3,9 @@ package com.example.schoolsystem.service;
 
 import com.example.schoolsystem.dto.AttendanceRequestDTO;
 import com.example.schoolsystem.dto.AttendanceResponseDTO;
-import com.example.schoolsystem.entity.AttendanceStatus;
-import com.example.schoolsystem.entity.Attendance;
-import com.example.schoolsystem.entity.ClassTeacherAssignment;
-import com.example.schoolsystem.entity.Teacher;
+import com.example.schoolsystem.entity.*;
 import com.example.schoolsystem.repository.*;
+import com.example.schoolsystem.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,6 +31,8 @@ public class AttendanceService {
     private final ClassTeacherAssignmentrepo classTeacherAssignmentrepo;
     private final Sessionrepo sessionRepository;
     private final Enrollementrepo enrollementrepo;
+    private final JwtUtils jwtUtils;
+    private final Userrepo userrepo;
 
 
     public ResponseEntity<?> saveAttendance(List<AttendanceRequestDTO> attendanceRequests, Long sessionId) {
@@ -67,11 +67,13 @@ public class AttendanceService {
         return ResponseEntity.ok("All attendance records saved successfully");
     }
 
-    public ResponseEntity<?> getAllAttendance(LocalDate date,Long sessionId) {
+    public ResponseEntity<?> getAllAttendance(LocalDate date,Long sessionId,String token) {
+
         List<Attendance> attendanceList = attendanceRepository.findAllByAttendanceDateAndEnrollementId_Session_SessionId(date,sessionId);
         List<AttendanceResponseDTO> response = attendanceList.stream()
                 .map(AttendanceResponseDTO::new)
                 .toList();
+
         return ResponseEntity.ok(response);
     }
     public ResponseEntity<?> editingAttendance(Long studentId, LocalDate date, String status) {
@@ -96,6 +98,17 @@ public class AttendanceService {
 
         return ResponseEntity.ok("Attendance edited successfully");
     }
+
+    public ResponseEntity<?> getAttendanceclassbyclassteacher(String token){
+        String tokeid = jwtUtils.getUserNameFromJwtToken(token);
+        Teacher teachervalue = teacherRepository.findByEmail(tokeid);
+
+        ClassTeacherAssignment cla = classTeacherAssignmentrepo.findByTeacher(teachervalue);
+
+        return ResponseEntity.ok(cla.getGradeClass());
+
+    }
+
 
 
 }

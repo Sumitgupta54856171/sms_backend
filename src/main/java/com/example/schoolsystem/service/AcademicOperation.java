@@ -10,6 +10,7 @@ import com.example.schoolsystem.repository.Sessionrepo;
 import com.example.schoolsystem.repository.Teacherrepo;
 import com.example.schoolsystem.repository.Timetablerepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -149,4 +150,21 @@ public class AcademicOperation {
 
         return timetablerepo.save(existing);
     }
-}
+    public ResponseEntity<?> updateperiodtimetable(TimetableRecord timetableRecord){
+        System.out.println("check detail "+timetableRecord.getGradeClass() +" "+timetableRecord.getSubjectName()+" "+timetableRecord.getPeriodNumber()+" "+timetableRecord.getTeacher()+" "+timetableRecord.getSession() );
+        System.out.println("start update");
+        return ResponseEntity.ok(timetablerepo.save(timetableRecord));
+    }
+    public ResponseEntity<?> deletperiod(Long timetableid){
+        timetablerepo.deleteById(timetableid);
+        return ResponseEntity.ok("perid is deleted");
+    }
+    public ResponseEntity<?> getallClassteacher(Long sessionId){
+
+        List<ClassTeacherAssignment> ct = classTeacherAssignmentrepo.findBySessionId(sessionId);
+        return ResponseEntity.ok(ct);
+    }
+
+
+    }
+

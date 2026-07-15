@@ -79,7 +79,7 @@ coverage/
 jacoco.exec
 
 ### Docker ###
-.dockerignore
+# .dockerignore
 
 ### Uploads ###
 uploads/

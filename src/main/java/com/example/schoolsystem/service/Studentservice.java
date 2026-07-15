@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.*;
@@ -184,6 +185,15 @@ public class Studentservice {
         List<Student> st = studentrepo.findAll();
         List<StudentListdto> stl = st.stream().map(s -> new StudentListdto(s.getName(), s.getId(), s.getScholar_no(), s.getFather_name(), s.getMother_name(), s.getStatus())).collect(Collectors.toList());
         return ResponseEntity.ok(stl);
+    }
+    public ResponseEntity<?> getclassandrollno(Long studentId,Long sessionId){
+        Enrollement_session class_no = enrollementrepo.findByStudent_IdAndSession_SessionId(studentId,sessionId);
+        String cls = class_no.getClass_no();
+        String rl = class_no.getRoll_no();
+        Map<String,Object> responselist = new HashMap<>();
+        responselist.put("class_no",cls);
+        responselist.put("roll_no",rl);
+        return ResponseEntity.ok(responselist);
     }
 
 

@@ -9,20 +9,17 @@ import com.example.schoolsystem.entity.BankDetail;
 import com.example.schoolsystem.entity.Photo;
 import com.example.schoolsystem.entity.Student;
 import com.example.schoolsystem.repository.BankRepo;
-import com.example.schoolsystem.repository.PhotorRepo;
 import com.example.schoolsystem.repository.Studentrepo;
 import com.example.schoolsystem.service.PhotoService;
 import com.example.schoolsystem.service.Studentservice;
 import com.example.schoolsystem.service.StudetnOpertionservice;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.ServiceNotFoundException;
 import java.util.List;
 
 @RestController
@@ -33,12 +30,12 @@ public class Studentcontroller {
 
     private final Studentservice studentservice;
     private final PhotoService photoService;
-    private final PhotorRepo photorRepo;
     private final BankRepo bankRepo;
     private final StudetnOpertionservice studetnOpertionservice;
     private final Studentrepo studentrepo;
 
 
+    @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody Studentdto studentdto, @CookieValue(value = "sessionId") String id) throws Exception {
         Long sessionId = Long.parseLong(id);
@@ -74,8 +71,7 @@ public class Studentcontroller {
     public ResponseEntity<?> getPhoto(@PathVariable("studentId") Long studentId)
     {
        try{
-           return ResponseEntity.ok(photorRepo.findByStudent_Id(studentId));
-
+           return photoService.getPhoto(studentId, null);
        } catch (Exception e) {
            throw new UsernameNotFoundException(e.getMessage());
        }
@@ -133,9 +129,15 @@ public class Studentcontroller {
     }
 
     @DeleteMapping("/photo/delete/{studentId}")
-    public ResponseEntity<?> deletephot(@PathVariable("studentId")Long studentId)
+    public ResponseEntity<?> deletephot(@PathVariable("studentId") Long studentId)
     {
-        return ResponseEntity.ok(photoService.deletphot(studentId));
+        return ResponseEntity.ok(photoService.deletphot(studentId, null));
+    }
+    @GetMapping("/class/roll/no/{studentid}")
+    public  ResponseEntity<?> getclassandrollno(@PathVariable("studentid") Long studentid,@CookieValue("sessionId") String sessionId){
+        Long sessionid = Long.parseLong(sessionId);
+
+        return ResponseEntity.ok(studentservice.getclassandrollno(studentid,sessionid));
     }
     
 

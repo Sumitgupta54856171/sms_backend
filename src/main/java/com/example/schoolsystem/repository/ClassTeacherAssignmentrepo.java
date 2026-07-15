@@ -1,6 +1,7 @@
 package com.example.schoolsystem.repository;
 
 import com.example.schoolsystem.entity.ClassTeacherAssignment;
+import com.example.schoolsystem.entity.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -31,4 +32,15 @@ public interface ClassTeacherAssignmentrepo extends JpaRepository<ClassTeacherAs
     ClassTeacherAssignment findByGradeClass(String gradeClass,Long sessionId);
 
     boolean existsByGradeClassAndSessionId(String gradeClass, Long sessionId);
+
+    ClassTeacherAssignment findByTeacher(Teacher teacher);
+
+    ClassTeacherAssignment findByTeacher_Email(String teacherEmail);
+
+    ClassTeacherAssignment findByTeacher_EmailAndSessionId(String teacherEmail, Long sessionId);
+
+    ClassTeacherAssignment findByTeacher_Id(Long teacherId);
+    ClassTeacherAssignment findBySessionIdAndTeacher_Id(Long sessiondId,Long id);
+
+    Long teacher(Teacher teacher);
 }

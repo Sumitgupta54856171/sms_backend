@@ -13,4 +13,5 @@ public class PhotoResponseDto {
     private String fileName;
     private String contentType;
     private Long fileSize;
+    private Long teacherId;
 }

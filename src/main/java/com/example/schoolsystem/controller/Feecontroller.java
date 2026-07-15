@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -64,6 +65,7 @@ public class Feecontroller {
         Long sessionId = Long.parseLong(session);
         return ResponseEntity.ok(feeservice.getfeecollections(sessionId));
     }
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PutMapping("/update/fees/{studentId}/{discountamount}")
     public ResponseEntity<?> updatefeesbydisamount(@PathVariable("studentId") Long studentId,@PathVariable("discountamount") Long disamount,@CookieValue("sessionId") String id)
     {

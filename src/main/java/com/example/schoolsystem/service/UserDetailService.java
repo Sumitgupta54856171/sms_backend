@@ -33,6 +33,7 @@ public class UserDetailService implements UserDetailsService {
 
 
             String roleName = "ROLE_" + user.getRole();
+        System.out.println("check the role Name "+roleName);
 
 
             return new org.springframework.security.core.userdetails.User(

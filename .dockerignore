@@ -1,0 +1,27 @@
+# Uploads directory
+uploads/
+
+# Git
+.git
+.gitignore
+
+# Maven
+target/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Docker
+Dockerfile
+docker-compose.yml

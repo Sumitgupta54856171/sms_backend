@@ -27,15 +27,21 @@ public class AttendanceController {
     }
 
     @GetMapping("/date/{date}")
-    public ResponseEntity<?> getAllAttendance(@PathVariable("date") LocalDate date, @CookieValue(value = "sessionId",required = false) String sessionId)
+    public ResponseEntity<?> getAllAttendance(@PathVariable("date") LocalDate date, @CookieValue(value = "sessionId",required = false) String sessionId,@RequestHeader(value = "Authorization") String token)
     {
+        if (token == null || !token.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body("Missing or invalid Authorization header");
+        }
+        String tokenvalue = token.substring(7);
+        System.out.println("check the value of token "+tokenvalue);
         Long id = Long.parseLong(sessionId);
-        return attendanceService.getAllAttendance(date,id);
+        return attendanceService.getAllAttendance(date,id,tokenvalue);
     }
 
     @PutMapping("/{studentId}/{status}/{date}")
     public ResponseEntity<?> editingAttendance(@PathVariable("studentId") Long studentId,@PathVariable("status") String status,@PathVariable("date") LocalDate date){
         return attendanceService.editingAttendance(studentId,date,status);
     }
+
 
 }

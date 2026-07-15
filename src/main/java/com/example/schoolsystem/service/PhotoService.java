@@ -2,10 +2,11 @@ package com.example.schoolsystem.service;
 
 import com.example.schoolsystem.dto.PhotoResponseDto;
 import com.example.schoolsystem.entity.Photo;
+import com.example.schoolsystem.entity.Teacher;
 import com.example.schoolsystem.repository.PhotorRepo;
 import com.example.schoolsystem.repository.Studentrepo;
+import com.example.schoolsystem.repository.Teacherrepo;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class PhotoService {
 
     private final PhotorRepo photorRepo;
     private final Studentrepo studentrepo;
+    private final Teacherrepo teacherrepo;
 
     @Value("${photo.upload.dir:uploads/photos}")
     private String uploadDir;
@@ -38,13 +40,24 @@ public class PhotoService {
 
         // Validate studentId
         Long studentId = dto.getStudentId();
-        if (studentId == null) {
-            throw new IllegalArgumentException("Student ID is required");
+
+        Long teacherId = dto.getTeacherId();
+        
+        // Ensure at least one ID is provided
+        if (studentId == null && teacherId == null) {
+            throw new IllegalArgumentException("Either studentId or teacherId must be provided");
+        }
+        
+        Teacher teacher = null;
+        if (teacherId != null) {
+            teacher = teacherrepo.findById(teacherId).orElse(null);
         }
 
         // Validate student exists
-        var student = studentrepo.findById(studentId)
-                .orElseThrow(() -> new IllegalArgumentException("Student not found with ID: " + studentId));
+        com.example.schoolsystem.entity.Student student = null;
+        if (studentId != null) {
+            student = studentrepo.findById(studentId).orElse(null);
+        }
 
         try {
             // Create upload directory
@@ -72,33 +85,69 @@ public class PhotoService {
                     .filePath(filePath.toString())
                     .fileSize(file.getSize())
                     .student(student)
+                    .teacher(teacher)
                     .build();
 
             Photo saved = photorRepo.save(photo);
 
             // Return response DTO
+           if(studentId != null){
             PhotoResponseDto responseDto = PhotoResponseDto.builder()
                     .fileName(saved.getFileName())
                     .contentType(saved.getContentType())
                     .fileSize(saved.getFileSize())
                     .studentId(saved.getStudent().getId())
                     .build();
+                    return responseDto;
+            
+           }else{
+            PhotoResponseDto responseDto = PhotoResponseDto.builder()
+                    .fileName(saved.getFileName())
+                    .contentType(saved.getContentType())
+                    .fileSize(saved.getFileSize())
+                    .teacherId(saved.getTeacher().getId())
+                    .build();
+               return responseDto;
+           }
+            
+            
 
-            return responseDto;
+
 
         } catch (IOException e) {
             throw new RuntimeException("Failed to store file: " + e.getMessage(), e);
         }
     }
     @Transactional
-    public ResponseEntity<?> deletphot(Long studentId){
+    public ResponseEntity<?> deletphot(Long studentId, Long teacherId){
         System.out.println("delete photo start");
-        photorRepo.deleteByStudent_Id(studentId);
+        if (studentId != null) {
+            photorRepo.deleteByStudent_Id(studentId);
+        } else if (teacherId != null) {
+            photorRepo.deleteByTeacher_Id(teacherId);
+        } else {
+            throw new IllegalArgumentException("Either studentId or teacherId must be provided");
+        }
         return ResponseEntity.ok("delete photo");
     }
+    
+    public ResponseEntity<?> getPhoto(Long studentId, Long teacherId) {
+        if (studentId != null) {
+            return ResponseEntity.ok(photorRepo.findByStudent_Id(studentId).orElse(null));
+        } else if (teacherId != null) {
+            return ResponseEntity.ok(photorRepo.findByTeacher_Id(teacherId).orElse(null));
+        } else {
+            throw new IllegalArgumentException("Either studentId or teacherId must be provided");
+        }
+    }
+    
     @Transactional
     public ResponseEntity<?> update(Photo photo){
-        photorRepo.deleteByStudent_Id(photo.getStudent().getId());
+        if (photo.getStudent() != null && photo.getStudent().getId() != null) {
+            photorRepo.deleteByStudent_Id(photo.getStudent().getId());
+        } else if (photo.getTeacher() != null && photo.getTeacher().getId() != null) {
+            photorRepo.deleteByTeacher_Id(photo.getTeacher().getId());
+        }
         photorRepo.save(photo);
         return ResponseEntity.ok("successfully update");
     }

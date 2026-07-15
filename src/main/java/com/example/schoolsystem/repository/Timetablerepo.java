@@ -31,4 +31,6 @@ public interface Timetablerepo extends JpaRepository<TimetableRecord, Long> {
             @Param("periodNumber") Integer periodNumber,
             @Param("sessionId") Long sessionId
     );
+
+    TimetableRecord findBySubjectNameAndGradeClass(String subjectName, String gradeClass);
 }
