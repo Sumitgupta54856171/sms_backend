@@ -19,6 +19,7 @@ public class Event {
     private LocalDate eventdate;
     private String venue;
     private String color;
+    private Long sessionId;
 
 }
 
