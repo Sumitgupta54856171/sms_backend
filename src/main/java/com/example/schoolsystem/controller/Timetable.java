@@ -4,6 +4,7 @@ package com.example.schoolsystem.controller;
 import com.example.schoolsystem.entity.ExamTimeTable;
 import com.example.schoolsystem.entity.TestTimetable;
 import com.example.schoolsystem.service.Examservice;
+import com.example.schoolsystem.service.Gradeservice;
 import com.example.schoolsystem.service.Testservice;
 import lombok.RequiredArgsConstructor;
 
@@ -18,6 +19,7 @@ import java.util.List;
 public class Timetable {
     private final Testservice testservice;
     private final Examservice examservice;
+    private final Gradeservice gradeservice;
 
     @PostMapping("/savetesttimetable")
     public ResponseEntity<?> savetesttimetable(@RequestBody List<TestTimetable> testTimetable, @CookieValue("sessionId") Long sessionId){
@@ -57,5 +59,10 @@ public class Timetable {
     @GetMapping("/examByName/{examName}")
     public ResponseEntity<?> getExamByName(@PathVariable String examName){
         return examservice.getExamByName(examName);
+    }
+    @GetMapping("/grade/fill/{teacherId}/{timetableid}/{type}")
+    public ResponseEntity<?> getmarkfill(@PathVariable("teacherId") Long teacherId, @PathVariable("timetableid") Long timetableid, @PathVariable("type") String type,@CookieValue("sessionId") String sessionId){
+        Long id = Long.parseLong(sessionId);
+        return gradeservice.getgradefillbyteacherId(teacherId, timetableid,id,type);
     }
 }

@@ -144,7 +144,8 @@ public class Studentservice {
 
     }
     public ResponseEntity<?> getStudentbyclass(String class_no,Long sessionId){
-        List<Enrollement_session> st = enrollementrepo.findAllByClass_noAndSession_SessionId(class_no,sessionId);
+
+        List<Enrollement_session> st = enrollementrepo.findAllByClass_noAndSession_SessionId(class_no.replace("Grade ",""),sessionId);
         List<StudentClassResponse> response = st.stream().map(s->new StudentClassResponse(s.getClass_no(),s.getRoll_no(),s.getStudent().getName(),s.getStudent().getScholar_no(),s.getStudent().getId())).collect(Collectors.toList());
 
 

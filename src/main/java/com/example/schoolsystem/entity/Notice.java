@@ -19,4 +19,5 @@ public class Notice {
     private String description;
     private String tag;
     private LocalDate data;
+    private Long sessionId;
 }

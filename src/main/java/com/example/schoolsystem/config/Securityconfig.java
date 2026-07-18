@@ -50,7 +50,7 @@ public class Securityconfig {
                         .requestMatchers("/api/v1/user","/api/v1/session/**","/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/register",
                                 "/api/v1/fee/**").hasAnyRole("ACCOUNTANT","ADMIN","SUPER_ADMIN")
-                        .requestMatchers("/api/v1/teachers/update","/api/v1/attendance/**","/api/v1/teachers/**","/api/v1/timetable/**","/api/v1/academic-options/**").hasAnyRole("TEACHER","ADMIN","SUPER_ADMIN")
+                        .requestMatchers("/api/v1/teachers/update","/api/v1/attendance/**","/api/v1/teachers/**","/api/v1/timetable/**","/api/v1/academic-options/**","/api/v1/grade","/api/v1/notice/**").hasAnyRole("TEACHER","ADMIN","SUPER_ADMIN")
                         .requestMatchers("/api/v1/students/**").hasAnyRole("TEACHER","ADMIN","SUPER_ADMIN","ACCOUNTANT")
                         .requestMatchers("/uploads/**").permitAll()
                         .anyRequest().authenticated()
@@ -87,7 +87,7 @@ public class Securityconfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Arrays.asList("https://roseconvent.cheviot-gecko.ts.net"));
+        corsConfiguration.setAllowedOrigins(Arrays.asList("https://ubuntu.newt-oratrice.ts.net"));
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setAllowedMethods(Arrays.asList("*"));
         corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));

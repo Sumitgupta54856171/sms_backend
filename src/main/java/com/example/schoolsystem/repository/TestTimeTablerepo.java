@@ -17,4 +17,6 @@ public interface TestTimeTablerepo extends JpaRepository<TestTimetable,Long> {
     List<TestTimetable> findAllBySessionId(Long sessionId);
 
     List<TestTimetable> findAllByTimetableName(String timetableName);
+
+    List<TestTimetable> findAllBySessionIdAndTeacher_IdAndTesttimetableId(Long sessionId, Long teacherId, Long testtimetableId);
 }
