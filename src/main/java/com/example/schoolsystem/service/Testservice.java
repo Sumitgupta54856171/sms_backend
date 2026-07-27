@@ -91,5 +91,9 @@ public class Testservice {
         }
 
     }
+    public ResponseEntity<?> deletetimetable(Long id){
+        testTimeTablerepo.deleteById(id);
+        return ResponseEntity.ok("successfully test time table delete");
+    }
 
 }

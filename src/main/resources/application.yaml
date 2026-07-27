@@ -1,4 +1,5 @@
 spring:
+
   application:
     name: schoolsystem
   datasource:
@@ -12,4 +13,10 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+whatsapp:
+  verifycode: Sumit2531
+server:
+  port: 8081
+
 

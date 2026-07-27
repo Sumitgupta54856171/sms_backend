@@ -24,11 +24,7 @@ public class Feecontroller {
         return ResponseEntity.ok(feeservice.getStudentTotalFee(studentId,sessionId));
     }
 
-    @GetMapping("/student/{id}/session/{sessionName}")
-    public ResponseEntity<?> getrecords(){
 
-        return ResponseEntity.ok("fetch details");
-    }
     @PostMapping("/student/fees/collection/invoice")
     public ResponseEntity<?> saveInvoice(@RequestBody PaymentRequestDto paymentRequestDto){
         return ResponseEntity.ok(feeservice.generatedInvoice(paymentRequestDto));

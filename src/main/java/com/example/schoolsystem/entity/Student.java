@@ -22,7 +22,7 @@ public class Student {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(unique = true, length = 100)
+    @Column(unique = true, length = 250,nullable = true)
     private String email;
 
     @Column(unique = true, nullable = false, length = 50)

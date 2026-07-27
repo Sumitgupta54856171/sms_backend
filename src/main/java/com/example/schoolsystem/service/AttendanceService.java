@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.management.RuntimeErrorException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -106,6 +107,18 @@ public class AttendanceService {
         ClassTeacherAssignment cla = classTeacherAssignmentrepo.findByTeacher(teachervalue);
 
         return ResponseEntity.ok(cla.getGradeClass());
+
+    }
+    public ResponseEntity<?> getAttendancebydate(LocalDate startdate,LocalDate enddate,Long sessionId){
+        if(startdate == null || enddate ==null){
+            return ResponseEntity.ok("please share the valueof start date and enddate");
+        }
+        List<Attendance> at = attendanceRepository.findByAttendanceDateBetweenAndEnrollementId_Session_SessionId(startdate, enddate, sessionId);
+        List<AttendanceResponseDTO> response = at.stream()
+                .map(AttendanceResponseDTO::new)
+                .toList();
+
+        return ResponseEntity.ok(response);
 
     }
 

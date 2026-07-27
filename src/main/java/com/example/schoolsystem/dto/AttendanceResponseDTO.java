@@ -28,7 +28,7 @@ public class AttendanceResponseDTO {
     private String scholarNo;
     private String grade;
     private Long studentId;
-
+    private String gender;
     // Constructor from Attendance entity
     public AttendanceResponseDTO(Attendance attendance) {
         if (attendance == null) return;
@@ -51,6 +51,7 @@ public class AttendanceResponseDTO {
                 this.studentName = student.getName();
                 this.scholarNo = student.getScholar_no();
                 this.grade = enrollment.getClass_no();
+                this.gender = student.getGender();
             }
         }
     }

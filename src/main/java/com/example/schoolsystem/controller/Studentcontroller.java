@@ -139,7 +139,8 @@ public class Studentcontroller {
 
         return ResponseEntity.ok(studentservice.getclassandrollno(studentid,sessionid));
     }
-    
+
+
 
 
 

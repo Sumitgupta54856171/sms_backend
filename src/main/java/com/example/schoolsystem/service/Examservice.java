@@ -88,4 +88,9 @@ public class Examservice {
             return ResponseEntity.ok(0);
         }
     }
+    public ResponseEntity<?> deleteexmatimetable(Long id){
+
+        examTimeTablerepo.deleteById(id);
+        return ResponseEntity.ok("sucessfully delete the exam time table");
+    }
 }

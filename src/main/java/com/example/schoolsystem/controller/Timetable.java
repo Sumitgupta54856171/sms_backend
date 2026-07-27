@@ -8,6 +8,7 @@ import com.example.schoolsystem.service.Gradeservice;
 import com.example.schoolsystem.service.Testservice;
 import lombok.RequiredArgsConstructor;
 
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,5 +65,13 @@ public class Timetable {
     public ResponseEntity<?> getmarkfill(@PathVariable("teacherId") Long teacherId, @PathVariable("timetableid") Long timetableid, @PathVariable("type") String type,@CookieValue("sessionId") String sessionId){
         Long id = Long.parseLong(sessionId);
         return gradeservice.getgradefillbyteacherId(teacherId, timetableid,id,type);
+    }
+    @DeleteMapping("/testtime/{testId}")
+    public ResponseEntity<?> deletetesttime(@PathVariable Long testId) {
+        return testservice.deletetimetable(testId);
+    }
+    @DeleteMapping("/examtime/{examid}")
+    public ResponseEntity<?> deleteexamtimetable(@PathVariable Long examid) {
+        return examservice.deleteexmatimetable(examid);
     }
 }

@@ -29,7 +29,7 @@ public class Attendance {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private AttendanceStatus status; // PRESENT ya ABSENT
+    private AttendanceStatus status;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
