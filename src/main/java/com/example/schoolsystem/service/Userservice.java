@@ -15,8 +15,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Year;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,6 +33,8 @@ public  class Userservice {
     private final Sessionrepo sessionrepo;
     private final ClassTeacherAssignmentrepo ctar;
     private final Teacherrepo teacherrepo;
+    private final Studentrepo studentrepo;
+    private final PasswordEncoder passwordEncoder;
 
     public String register(){
         return "registered";
@@ -38,12 +44,13 @@ public  class Userservice {
         System.out.println("start login");
         User checkrole = userrepo.findByEmail(loginRequest.getEmail());
         if(checkrole == null){
-            return ResponseEntity.badRequest().body(null);
+            throw new UsernameNotFoundException("User with this email does not exist. Please check your email or register.");
         }
         System.out.println("check the user role is exits "+checkrole.getRole());
         Role rolecheck =checkrole.getRole();
 
         if(rolecheck == Role.TEACHER){
+
 
             Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(auth);
@@ -208,5 +215,30 @@ public  class Userservice {
 
     public String logout(){
         return "logged out";
+    }
+
+    public ResponseEntity<?> generatedId(List<User> users) {
+        System.out.println("start generated login of student and parent");
+        String currentYear = String.valueOf(Year.now().getValue());
+
+        for (User user : users) {
+            if (user.getRole() == Role.STUDENT) {
+                String studentUsername = user.getUsername() + "RC" + currentYear;
+                System.out.println(user.getUsername());
+                user.setUsername(studentUsername);
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+                userrepo.save(user);
+            } else if (user.getRole() == Role.PARENT) {
+                // For parent login, username is scholar_no, password is mobile number
+                studentrepo.findByScholar_no(user.getUsername()).ifPresent(student -> {
+                    if (student.getPhone() != null) {
+                        user.setPassword(passwordEncoder.encode(student.getPhone()));
+                        userrepo.save(user);
+                    }
+                });
+            }
+        }
+
+        return ResponseEntity.ok("Student and parent login credentials generated successfully");
     }
 }

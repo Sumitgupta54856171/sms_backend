@@ -17,6 +17,6 @@ spring:
 whatsapp:
   verifycode: Sumit2531
 server:
-  port: 8081
+  port: 9091
 
 

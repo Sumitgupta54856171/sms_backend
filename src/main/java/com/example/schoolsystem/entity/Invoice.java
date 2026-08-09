@@ -35,6 +35,7 @@ public class Invoice {
     @Transient
     @JsonProperty("enrollment_id")
     private Long enrollement_id;
+    @Column(nullable = false)
     private Long amount;
     private String paymentType;
     private String remarks;

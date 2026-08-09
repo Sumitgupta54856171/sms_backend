@@ -72,5 +72,11 @@ public class Feecontroller {
     public ResponseEntity<?> getinvoice(@PathVariable("invoiceId")Long invoiceid){
         return ResponseEntity.ok(feeservice.getInvoice(invoiceid));
     }
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @DeleteMapping("/invoice/delete/{invoiceId}")
+    public ResponseEntity<?> deleteinvoice(@PathVariable("invoiceId") Long id){
+         return ResponseEntity.ok(feeservice.deleteinvoice(id));
+    }
+    
   
 }

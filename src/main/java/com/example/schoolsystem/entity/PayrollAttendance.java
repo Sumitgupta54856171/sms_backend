@@ -4,24 +4,20 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Time;
 import java.time.LocalDate;
 
 @Data
 @Entity
 @NoArgsConstructor
-@Table(
-        name = "payrollattendance",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"todaydate","teacherId"})
-)
+@Table(name = "payrollattendance")
 public class PayrollAttendance {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int payAttendanceID;
     private int machineId;
     private LocalDate todaydate;
-    private Time checkin;
-    private Time checkout;
+    private String checkin;
+    private String checkout;
     @Enumerated(EnumType.STRING)
     private Attendancestatus status;
     private String workhours;
@@ -30,5 +26,6 @@ public class PayrollAttendance {
     @OneToOne
     @JoinColumn(name = "teacherId",nullable = true)
     private Teacher teacher;
+    private LocalDate date;
 
 }

@@ -21,8 +21,6 @@ public class ExanGrade {
     private Long sessionId;
     private String classNo;
     private float mark;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "examtimetableId", nullable = false)
-    private ExamTimeTable examtimetableId;
+    private Long examtimetableId;
 
 }
