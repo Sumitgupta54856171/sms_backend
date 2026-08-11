@@ -15,4 +15,7 @@ public interface TesTgraderepo extends JpaRepository<TestGrade,Long> {
     TestGrade findByStudentIdAndTestTimetable_TesttimetableId(Long studentId, Long testTimetableTesttimetableId);
 
 
+    List<TestGrade> findAllBySessionId(Long sessionId);
+
+    List<TestGrade> findAllBySessionIdAndClassNoAndTestTimetable_TimetableName(Long sessionId, String classNo, String testTimetableTimetableName);
 }

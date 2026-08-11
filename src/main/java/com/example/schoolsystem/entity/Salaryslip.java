@@ -13,11 +13,14 @@ public class Salaryslip {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long salayId;
     private Double salary;
+    private Double advancedpay;
     @OneToOne
     @JoinColumn(name = "teacherId")
     private Teacher teacher;
     @Enumerated(EnumType.STRING)
     private PayrollStatus status;
+
+    private int machineId;
 
 
 }

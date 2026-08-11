@@ -3,6 +3,7 @@ package com.example.schoolsystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.micrometer.core.annotation.Counted;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,7 +39,8 @@ public class Enrollement_session {
     @Column
     private String roll_no;
 
-    private Long total_fees;
+    @Column(nullable = false,columnDefinition = "biginit default 0")
+    private Long total_fees=0L;
 
     @Column(nullable = false, columnDefinition = "bigint default 0")
     private Long dueFees = 0L;

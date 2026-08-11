@@ -200,6 +200,10 @@ public class Feeservice {
         return ResponseEntity.ok("update student fees");
 
     }
+    public ResponseEntity<?> deleteinvoice(Long id){
+        invoicerepo.deleteById(id);
+        return ResponseEntity.ok("delete successfully invoice");
+    }
 
 
 

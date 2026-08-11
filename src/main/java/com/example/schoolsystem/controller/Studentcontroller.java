@@ -1,16 +1,15 @@
 package com.example.schoolsystem.controller;
 
 
-import com.example.schoolsystem.dto.BankDetailsRequestDto;
-import com.example.schoolsystem.dto.EnrollmentRequestDto;
-import com.example.schoolsystem.dto.PhotoResponseDto;
-import com.example.schoolsystem.dto.Studentdto;
+import com.example.schoolsystem.dto.*;
 import com.example.schoolsystem.entity.BankDetail;
+import com.example.schoolsystem.entity.ElectSubject;
 import com.example.schoolsystem.entity.Photo;
 import com.example.schoolsystem.entity.Student;
 import com.example.schoolsystem.repository.BankRepo;
 import com.example.schoolsystem.repository.Studentrepo;
 import com.example.schoolsystem.service.PhotoService;
+import com.example.schoolsystem.service.Studentportaservice;
 import com.example.schoolsystem.service.Studentservice;
 import com.example.schoolsystem.service.StudetnOpertionservice;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +32,7 @@ public class Studentcontroller {
     private final BankRepo bankRepo;
     private final StudetnOpertionservice studetnOpertionservice;
     private final Studentrepo studentrepo;
+    private final Studentportaservice studentportaservice;
 
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
@@ -138,6 +138,20 @@ public class Studentcontroller {
         Long sessionid = Long.parseLong(sessionId);
 
         return ResponseEntity.ok(studentservice.getclassandrollno(studentid,sessionid));
+    }
+    @PutMapping("/update/roll/no")
+    public ResponseEntity<?> updateRollNo(@RequestBody List<UpdateRollNodto> updatelist, @CookieValue("sessionId") String sessionId){
+        Long sessionid = Long.parseLong(sessionId);
+        return ResponseEntity.ok(studentportaservice.updateRollNo(updatelist,sessionid));
+    }
+    @PostMapping("/save/elective/subject")
+    public ResponseEntity<?> saveelective(List<ElectSubject> electSubjects){
+        return  ResponseEntity.ok(studetnOpertionservice.savesubject(electSubjects));
+    }
+    @GetMapping("/get/elective/subject")
+    public ResponseEntity<?> getelective(@CookieValue("sessionId") String sessionId){
+        Long id = Long.parseLong(sessionId);
+        return ResponseEntity.ok(studetnOpertionservice.getelectsubject(id));
     }
 
 

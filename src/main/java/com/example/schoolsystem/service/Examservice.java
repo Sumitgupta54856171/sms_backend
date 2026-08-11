@@ -93,4 +93,5 @@ public class Examservice {
         examTimeTablerepo.deleteById(id);
         return ResponseEntity.ok("sucessfully delete the exam time table");
     }
+    
 }

@@ -17,5 +17,7 @@ public interface Studentrepo extends JpaRepository<Student,Long> {
     boolean existsByScholarNo(@Param("scholar_no") String scholar_no);
 
     boolean existsByEmail(String email);
-}
 
+    @Query("SELECT s FROM Student s WHERE s.scholar_no = :username")
+    Optional<Student> findByScholar_no(@Param("username") String username);
+}
