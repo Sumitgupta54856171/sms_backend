@@ -1,6 +1,8 @@
 package com.example.schoolsystem.controller;
 
 
+import com.example.schoolsystem.util.SessionUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import com.example.schoolsystem.entity.TimetableRecord;
 import com.example.schoolsystem.repository.Timetablerepo;
 import com.example.schoolsystem.service.AcademicOperation;
@@ -21,22 +23,26 @@ public class AcadmemicOptioncontroller {
 
 
     @PostMapping("/time-table/period")
-    public ResponseEntity<?> timeTable(@CookieValue("sessionId") String sessionId, @RequestBody TimetableRecord timetableRecord){
+    public ResponseEntity<?> timeTable(HttpServletRequest request, @RequestBody TimetableRecord timetableRecord){
+        String sessionId = SessionUtil.getSessionId(request);
         System.out.println(timetableRecord.getTeacher_id());
         return ResponseEntity.ok(academicOperation.createTimetableRecord(timetableRecord,sessionId));
 
     }
     @GetMapping("/time-table/teacher/{teacherId}")
-    public ResponseEntity<?> timeTableByTeacher(@CookieValue("sessionId") String sessionId, @PathVariable("teacherId") Long teacherId){
+    public ResponseEntity<?> timeTableByTeacher(HttpServletRequest request, @PathVariable("teacherId") Long teacherId){
+        String sessionId = SessionUtil.getSessionId(request);
         return ResponseEntity.ok(academicOperation.getTimetableByTeacher(teacherId,Long.parseLong(sessionId)));
     }
 
     @GetMapping("/time-table/grade/{gradeClass}")
-    public ResponseEntity<?> timeTableByClass(@CookieValue("sessionId") String sessionId, @RequestParam("gradeClass") String gradeClass){
+    public ResponseEntity<?> timeTableByClass(HttpServletRequest request, @RequestParam("gradeClass") String gradeClass){
+        String sessionId = SessionUtil.getSessionId(request);
         return ResponseEntity.ok(academicOperation.getTimetableByClass(gradeClass,Long.parseLong(sessionId)));
     }
     @GetMapping("/time-table/all")
-    public ResponseEntity<?> timeTableAll(@CookieValue("sessionId") String sessionId){
+    public ResponseEntity<?> timeTableAll(HttpServletRequest request){
+        String sessionId = SessionUtil.getSessionId(request);
         return ResponseEntity.ok(academicOperation.getAllTimetables(Long.parseLong(sessionId)));
     }
     @PutMapping("/time-table/update/{timetableId}")
@@ -49,7 +55,8 @@ public class AcadmemicOptioncontroller {
         return ResponseEntity.ok(academicOperation.deletperiod(periodid));
     }
     @GetMapping("/timetable/class-teachers/all")
-    public ResponseEntity<?> getClassTeacher(@CookieValue("sessionId") String session){
+    public ResponseEntity<?> getClassTeacher(HttpServletRequest request){
+        String session = SessionUtil.getSessionId(request);
         Long sessionId = Long.parseLong(session);
         return ResponseEntity.ok(academicOperation.getallClassteacher(sessionId));
     }

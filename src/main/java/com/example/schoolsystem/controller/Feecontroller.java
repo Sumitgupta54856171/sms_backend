@@ -1,6 +1,8 @@
 package com.example.schoolsystem.controller;
 
 
+import com.example.schoolsystem.util.SessionUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import com.example.schoolsystem.dto.PaymentRequestDto;
 import com.example.schoolsystem.service.Feeservice;
 import jakarta.websocket.server.PathParam;
@@ -19,7 +21,8 @@ public class Feecontroller {
 
 
     @GetMapping("/student/fees/{studentId}")
-    public ResponseEntity<?> getAnnulFees(@PathVariable("studentId") Long studentId,@CookieValue("sessionId") String id){
+    public ResponseEntity<?> getAnnulFees(@PathVariable("studentId") Long studentId,HttpServletRequest request){
+        String id = SessionUtil.getSessionId(request);
         Long sessionId = Long.parseLong(id);
         return ResponseEntity.ok(feeservice.getStudentTotalFee(studentId,sessionId));
     }
@@ -30,7 +33,8 @@ public class Feecontroller {
         return ResponseEntity.ok(feeservice.generatedInvoice(paymentRequestDto));
     }
     @GetMapping("/student/{studentId}/fee")
-    public ResponseEntity<?> getfeesprofile(@CookieValue("sessionId") String id,@PathVariable("studentId") Long  studentId){
+    public ResponseEntity<?> getfeesprofile(HttpServletRequest request,@PathVariable("studentId") Long  studentId){
+        String id = SessionUtil.getSessionId(request);
         Long sessionId = Long.parseLong(id);
         return ResponseEntity.ok(feeservice.getfeeprofiledetail(studentId,sessionId));
     }
@@ -39,7 +43,8 @@ public class Feecontroller {
         return ResponseEntity.ok(feeservice.getInvoicebyEnrollmentId(EnrollmentId));
     }
     @GetMapping("/get/session/sessionName/{studentId}")
-    public ResponseEntity<?> getsessionNamewithEnrollmentId(@CookieValue("sessionId")String sessionId,@PathVariable("studentId")Long studentId){
+    public ResponseEntity<?> getsessionNamewithEnrollmentId(HttpServletRequest request,@PathVariable("studentId")Long studentId){
+        String sessionId = SessionUtil.getSessionId(request);
         Long sessionid = Long.parseLong(sessionId);
         return ResponseEntity.ok(feeservice.getEnrollmentnoAndSessionName(studentId));
     }
@@ -50,21 +55,24 @@ public class Feecontroller {
     }
 
     @GetMapping("/invoice/history/{startdate}/{endDate}")
-    public ResponseEntity<?> getInvoicehistory(@CookieValue("sessionId")String session,@PathVariable("startdate")String startdate,@PathVariable("endDate")String endDate){
+    public ResponseEntity<?> getInvoicehistory(HttpServletRequest request,@PathVariable("startdate")String startdate,@PathVariable("endDate")String endDate){
+        String session = SessionUtil.getSessionId(request);
         Long sessionId = Long.parseLong(session);
         return ResponseEntity.ok(feeservice.getSessionInvoice(sessionId,startdate,endDate));
     }
 
     @GetMapping("/invoice/summary")
-    public ResponseEntity<?> getInvoicesummary(@CookieValue("sessionId") String session)
+    public ResponseEntity<?> getInvoicesummary(HttpServletRequest request)
     {
+        String session = SessionUtil.getSessionId(request);
         Long sessionId = Long.parseLong(session);
         return ResponseEntity.ok(feeservice.getfeecollections(sessionId));
     }
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PutMapping("/update/fees/{studentId}/{discountamount}")
-    public ResponseEntity<?> updatefeesbydisamount(@PathVariable("studentId") Long studentId,@PathVariable("discountamount") Long disamount,@CookieValue("sessionId") String id)
+    public ResponseEntity<?> updatefeesbydisamount(@PathVariable("studentId") Long studentId,@PathVariable("discountamount") Long disamount,HttpServletRequest request)
     {
+        String id = SessionUtil.getSessionId(request);
         Long sessionid = Long.parseLong(id);
         return ResponseEntity.ok(feeservice.setdiscount(studentId,sessionid,disamount));
     }

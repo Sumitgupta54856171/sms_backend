@@ -1,6 +1,8 @@
 package com.example.schoolsystem.controller;
 
 
+import com.example.schoolsystem.util.SessionUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import com.example.schoolsystem.entity.Session;
 import com.example.schoolsystem.service.Sessionservice;
 import com.example.schoolsystem.payload.ApiResponse;
@@ -31,7 +33,8 @@ public class Sessioncontroller {
     }
 
     @GetMapping("/switch/session/{sessionId}")
-    public ResponseEntity<?> switchSession(@PathVariable("sessionId") Long sessionId, @CookieValue("sessionId") Long previseSessionId, HttpServletResponse response) {
+    public ResponseEntity<?> switchSession(@PathVariable("sessionId") Long sessionId, HttpServletRequest request, HttpServletResponse response) {
+        Long previseSessionId = SessionUtil.getSessionIdAsLong(request);
         return sessionservice.switchSession(sessionId, previseSessionId, response);
     }
 }

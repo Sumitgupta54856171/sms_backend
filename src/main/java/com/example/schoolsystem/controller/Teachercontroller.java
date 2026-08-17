@@ -1,6 +1,8 @@
 package com.example.schoolsystem.controller;
 
 
+import com.example.schoolsystem.util.SessionUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import com.example.schoolsystem.entity.Photo;
 import com.example.schoolsystem.entity.Teacher;
 import com.example.schoolsystem.entity.TeacherPlan;
@@ -47,14 +49,16 @@ public class Teachercontroller {
         return teacherservice.updateteacher(teacher);
     }
     @GetMapping("/get/teacher/class")
-    public ResponseEntity<?> getteacherclass(@CookieValue("teacherId") String te,@CookieValue("sessionId") String  sessionId)
+    public ResponseEntity<?> getteacherclass(@CookieValue("teacherId") String te,HttpServletRequest request)
     {
+        String sessionId = SessionUtil.getSessionId(request);
         Long id  = Long.parseLong(sessionId);
         Long teacherId = Long.parseLong(te);
         return teacherservice.getclassofclassteacher(teacherId,id);
     }
     @PostMapping("/teacher/plan/save")
-    public ResponseEntity<?> saveTeacherPlan(@RequestBody TeacherPlan teacherPlan,@CookieValue("sessionId")String session,@CookieValue("teacherId") String teacer){
+    public ResponseEntity<?> saveTeacherPlan(@RequestBody TeacherPlan teacherPlan,HttpServletRequest request,@CookieValue("teacherId") String teacer){
+        String session = SessionUtil.getSessionId(request);
         Long id = Long.parseLong(session);
         Long id1 = Long.parseLong(teacer);
         return ResponseEntity.ok(teacherservice.saveTeacherPlan(teacherPlan,id,id1));

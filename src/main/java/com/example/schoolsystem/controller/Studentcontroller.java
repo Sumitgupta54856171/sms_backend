@@ -1,6 +1,8 @@
 package com.example.schoolsystem.controller;
 
 
+import com.example.schoolsystem.util.SessionUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import com.example.schoolsystem.dto.*;
 import com.example.schoolsystem.entity.BankDetail;
 import com.example.schoolsystem.entity.ElectSubject;
@@ -37,13 +39,15 @@ public class Studentcontroller {
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody Studentdto studentdto, @CookieValue(value = "sessionId") String id) throws Exception {
+    public ResponseEntity<?> save(@RequestBody Studentdto studentdto, HttpServletRequest request) throws Exception {
+        String id = SessionUtil.getSessionId(request);
         Long sessionId = Long.parseLong(id);
         return studentservice.saveStudentData(studentdto, sessionId);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> fetchStudentData(@CookieValue(value = "sessionId", required = false) String sessionId) throws Exception {
+    public ResponseEntity<?> fetchStudentData(HttpServletRequest request) throws Exception {
+        String sessionId = SessionUtil.getSessionId(request);
         if (sessionId == null) {
             return ResponseEntity.badRequest().body("Session ID is required");
         }
@@ -88,20 +92,23 @@ public class Studentcontroller {
         }
     }
     @GetMapping("/class/v1/{classno}")
-    public ResponseEntity<?> getStudentByClass(@PathVariable("classno") String classno,@CookieValue("sessionId")String sessionid){
+    public ResponseEntity<?> getStudentByClass(@PathVariable("classno") String classno,HttpServletRequest request){
+        String sessionid = SessionUtil.getSessionId(request);
         System.out.println("class no is "+classno);
         Long sessionId = Long.parseLong(sessionid);
         return studentservice.getStudentbyclass(classno,sessionId);
     }
 
     @GetMapping("/class/{class}")
-    public ResponseEntity<?> getStudentByClassAndSessionId(@PathVariable("class") String class_no, @CookieValue(value = "sessionId", required = false) String sessionId){
+    public ResponseEntity<?> getStudentByClassAndSessionId(@PathVariable("class") String class_no, HttpServletRequest request){
+        String sessionId = SessionUtil.getSessionId(request);
         Long sessionId1 = Long.parseLong(sessionId);
         return studentservice.getStudentByClassAndSessionId(class_no,sessionId1);
     }
 
     @PostMapping("/promote")
-    public ResponseEntity<?> promoteStudent(@RequestBody List<EnrollmentRequestDto> enrollmentRequestDto, @CookieValue("sessionId") Long sessionId){
+    public ResponseEntity<?> promoteStudent(@RequestBody List<EnrollmentRequestDto> enrollmentRequestDto, HttpServletRequest request){
+        Long sessionId = SessionUtil.getSessionIdAsLong(request);
         return ResponseEntity.ok(studetnOpertionservice.saveeEnrollment(enrollmentRequestDto,sessionId));
     }
 
@@ -134,13 +141,15 @@ public class Studentcontroller {
         return ResponseEntity.ok(photoService.deletphot(studentId, null));
     }
     @GetMapping("/class/roll/no/{studentid}")
-    public  ResponseEntity<?> getclassandrollno(@PathVariable("studentid") Long studentid,@CookieValue("sessionId") String sessionId){
+    public  ResponseEntity<?> getclassandrollno(@PathVariable("studentid") Long studentid,HttpServletRequest request){
+        String sessionId = SessionUtil.getSessionId(request);
         Long sessionid = Long.parseLong(sessionId);
 
         return ResponseEntity.ok(studentservice.getclassandrollno(studentid,sessionid));
     }
     @PutMapping("/update/roll/no")
-    public ResponseEntity<?> updateRollNo(@RequestBody List<UpdateRollNodto> updatelist, @CookieValue("sessionId") String sessionId){
+    public ResponseEntity<?> updateRollNo(@RequestBody List<UpdateRollNodto> updatelist, HttpServletRequest request){
+        String sessionId = SessionUtil.getSessionId(request);
         Long sessionid = Long.parseLong(sessionId);
         return ResponseEntity.ok(studentportaservice.updateRollNo(updatelist,sessionid));
     }
@@ -149,7 +158,8 @@ public class Studentcontroller {
         return  ResponseEntity.ok(studetnOpertionservice.savesubject(electSubjects));
     }
     @GetMapping("/get/elective/subject")
-    public ResponseEntity<?> getelective(@CookieValue("sessionId") String sessionId){
+    public ResponseEntity<?> getelective(HttpServletRequest request){
+        String sessionId = SessionUtil.getSessionId(request);
         Long id = Long.parseLong(sessionId);
         return ResponseEntity.ok(studetnOpertionservice.getelectsubject(id));
     }

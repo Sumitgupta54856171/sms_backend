@@ -1,5 +1,7 @@
 package com.example.schoolsystem.controller;
 
+import com.example.schoolsystem.util.SessionUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import com.example.schoolsystem.entity.ExanGrade;
 import com.example.schoolsystem.entity.TestGrade;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +19,8 @@ public class Gradecontroller {
     private final Gradeservice gradeservice;
 
     @PostMapping("/exam/mark/save")
-    public ResponseEntity<?> saveGrade(@RequestBody List<ExanGrade> examGrade,@CookieValue("sessionId")String sessionId) {
+    public ResponseEntity<?> saveGrade(@RequestBody List<ExanGrade> examGrade,HttpServletRequest request) {
+        String sessionId = SessionUtil.getSessionId(request);
         Long sessionid = Long.parseLong(sessionId);
         return gradeservice.saveexammark(examGrade,sessionid);
     }
@@ -26,12 +29,14 @@ public class Gradecontroller {
         return gradeservice.savemark(testGrade);
     }
     @GetMapping("/get/mark/{teacherId}/{subject}/{grade}/{type}/{examid}")
-    public ResponseEntity<?> getGrade(@PathVariable Long teacherId, @PathVariable String subject, @PathVariable String grade, @PathVariable String type,@CookieValue("sessionId") String sessionId,@PathVariable("examid")Long examid){
+    public ResponseEntity<?> getGrade(@PathVariable Long teacherId, @PathVariable String subject, @PathVariable String grade, @PathVariable String type,HttpServletRequest request,@PathVariable("examid")Long examid){
+        String sessionId = SessionUtil.getSessionId(request);
         Long id = Long.parseLong(sessionId);
         return gradeservice.getgrade(id,teacherId,subject,examid,type,grade);
     }
     @GetMapping("/get/mark/{classNo}/{testname}/{checkmark}")
-    public ResponseEntity<?> getTestGrade(@PathVariable String classNo, @PathVariable String testname, @PathVariable String checkmark,@CookieValue("sessionId") String sessionId){
+    public ResponseEntity<?> getTestGrade(@PathVariable String classNo, @PathVariable String testname, @PathVariable String checkmark,HttpServletRequest request){
+        String sessionId = SessionUtil.getSessionId(request);
         Long id = Long.parseLong(sessionId);
         return gradeservice.getMarkbyclassandsession(classNo,testname,id,checkmark);
     }
