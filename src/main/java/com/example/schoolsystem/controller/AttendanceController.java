@@ -1,6 +1,8 @@
 package com.example.schoolsystem.controller;
 
 
+import com.example.schoolsystem.util.SessionUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import com.example.schoolsystem.dto.AttendanceRequestDTO;
 import com.example.schoolsystem.dto.AttendanceResponseDTO;
 import com.example.schoolsystem.service.AttendanceService;
@@ -22,14 +24,16 @@ public class AttendanceController {
     
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveAttendance(@RequestBody List<AttendanceRequestDTO> data,@CookieValue(value = "sessionId",required = false) String sessionId){
+    public ResponseEntity<?> saveAttendance(@RequestBody List<AttendanceRequestDTO> data,HttpServletRequest request){
+        String sessionId = SessionUtil.getSessionId(request);
         Long id = Long.parseLong(sessionId);
         return attendanceService.saveAttendance(data,id);
     }
 
     @GetMapping("/date/{date}")
-    public ResponseEntity<?> getAllAttendance(@PathVariable("date") LocalDate date, @CookieValue(value = "sessionId",required = false) String sessionId,@RequestHeader(value = "Authorization") String token)
+    public ResponseEntity<?> getAllAttendance(@PathVariable("date") LocalDate date, HttpServletRequest request,@RequestHeader(value = "Authorization") String token)
     {
+        String sessionId = SessionUtil.getSessionId(request);
         if (token == null || !token.startsWith("Bearer ")) {
             return ResponseEntity.status(401).body("Missing or invalid Authorization header");
         }
@@ -44,7 +48,8 @@ public class AttendanceController {
         return attendanceService.editingAttendance(studentId,date,status);
     }
     @GetMapping("/dateAttendance/{startdate}/{enddate}")
-    public ResponseEntity<?> getattendancebetweendate(@PathVariable("startdate") LocalDate stardate, @PathVariable("enddate") LocalDate  enddate, @CookieValue("sessionId")String sessionId){
+    public ResponseEntity<?> getattendancebetweendate(@PathVariable("startdate") LocalDate stardate, @PathVariable("enddate") LocalDate  enddate, HttpServletRequest request){
+        String sessionId = SessionUtil.getSessionId(request);
         Long id = Long.parseLong(sessionId);
         return ResponseEntity.ok(attendanceService.getAttendancebydate(stardate,enddate,id));
     }
