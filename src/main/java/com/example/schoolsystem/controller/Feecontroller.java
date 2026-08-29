@@ -3,6 +3,7 @@ package com.example.schoolsystem.controller;
 
 import com.example.schoolsystem.dto.PaymentRequestDto;
 import com.example.schoolsystem.service.Feeservice;
+import com.example.schoolsystem.util.SessionUtil;
 import jakarta.websocket.server.PathParam;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +20,13 @@ public class Feecontroller {
 
 
     @GetMapping("/student/fees/{studentId}")
-    public ResponseEntity<?> getAnnulFees(@PathVariable("studentId") Long studentId,@CookieValue("sessionId") String id){
-        Long sessionId = Long.parseLong(id);
-        return ResponseEntity.ok(feeservice.getStudentTotalFee(studentId,sessionId));
+    public ResponseEntity<?> getAnnulFees(@PathVariable("studentId") Long studentId, @CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId){
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
+        Long id = Long.parseLong(sessionId);
+        return ResponseEntity.ok(feeservice.getStudentTotalFee(studentId, id));
     }
 
 
@@ -30,16 +35,24 @@ public class Feecontroller {
         return ResponseEntity.ok(feeservice.generatedInvoice(paymentRequestDto));
     }
     @GetMapping("/student/{studentId}/fee")
-    public ResponseEntity<?> getfeesprofile(@CookieValue("sessionId") String id,@PathVariable("studentId") Long  studentId){
-        Long sessionId = Long.parseLong(id);
-        return ResponseEntity.ok(feeservice.getfeeprofiledetail(studentId,sessionId));
+    public ResponseEntity<?> getfeesprofile(@CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId, @PathVariable("studentId") Long studentId){
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
+        Long id = Long.parseLong(sessionId);
+        return ResponseEntity.ok(feeservice.getfeeprofiledetail(studentId, id));
     }
     @GetMapping("/get/invoice/{EnrollmentId}")
     public ResponseEntity<?> getInvoicebyEnrollmentId(@PathVariable("EnrollmentId") Long EnrollmentId){
         return ResponseEntity.ok(feeservice.getInvoicebyEnrollmentId(EnrollmentId));
     }
     @GetMapping("/get/session/sessionName/{studentId}")
-    public ResponseEntity<?> getsessionNamewithEnrollmentId(@CookieValue("sessionId")String sessionId,@PathVariable("studentId")Long studentId){
+    public ResponseEntity<?> getsessionNamewithEnrollmentId(@CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId, @PathVariable("studentId") Long studentId){
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
         Long sessionid = Long.parseLong(sessionId);
         return ResponseEntity.ok(feeservice.getEnrollmentnoAndSessionName(studentId));
     }
@@ -50,23 +63,35 @@ public class Feecontroller {
     }
 
     @GetMapping("/invoice/history/{startdate}/{endDate}")
-    public ResponseEntity<?> getInvoicehistory(@CookieValue("sessionId")String session,@PathVariable("startdate")String startdate,@PathVariable("endDate")String endDate){
+    public ResponseEntity<?> getInvoicehistory(@CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId, @PathVariable("startdate") String startdate, @PathVariable("endDate") String endDate){
+        String session = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (session == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
         Long sessionId = Long.parseLong(session);
-        return ResponseEntity.ok(feeservice.getSessionInvoice(sessionId,startdate,endDate));
+        return ResponseEntity.ok(feeservice.getSessionInvoice(sessionId, startdate, endDate));
     }
 
     @GetMapping("/invoice/summary")
-    public ResponseEntity<?> getInvoicesummary(@CookieValue("sessionId") String session)
+    public ResponseEntity<?> getInvoicesummary(@CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId)
     {
+        String session = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (session == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
         Long sessionId = Long.parseLong(session);
         return ResponseEntity.ok(feeservice.getfeecollections(sessionId));
     }
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PutMapping("/update/fees/{studentId}/{discountamount}")
-    public ResponseEntity<?> updatefeesbydisamount(@PathVariable("studentId") Long studentId,@PathVariable("discountamount") Long disamount,@CookieValue("sessionId") String id)
+    public ResponseEntity<?> updatefeesbydisamount(@PathVariable("studentId") Long studentId, @PathVariable("discountamount") Long disamount, @CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId)
     {
-        Long sessionid = Long.parseLong(id);
-        return ResponseEntity.ok(feeservice.setdiscount(studentId,sessionid,disamount));
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
+        Long sessionid = Long.parseLong(sessionId);
+        return ResponseEntity.ok(feeservice.setdiscount(studentId, sessionid, disamount));
     }
     @GetMapping("/invoice/{invoiceId}")
     public ResponseEntity<?> getinvoice(@PathVariable("invoiceId")Long invoiceid){

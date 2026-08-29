@@ -3,6 +3,7 @@ package com.example.schoolsystem.controller;
 
 import com.example.schoolsystem.entity.Session;
 import com.example.schoolsystem.service.Sessionservice;
+import com.example.schoolsystem.util.SessionUtil;
 import com.example.schoolsystem.payload.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,12 @@ public class Sessioncontroller {
     }
 
     @GetMapping("/switch/session/{sessionId}")
-    public ResponseEntity<?> switchSession(@PathVariable("sessionId") Long sessionId, @CookieValue("sessionId") Long previseSessionId, HttpServletResponse response) {
+    public ResponseEntity<?> switchSession(@PathVariable("sessionId") Long sessionId, @CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId, HttpServletResponse response) {
+        String prevSessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (prevSessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
+        Long previseSessionId = Long.parseLong(prevSessionId);
         return sessionservice.switchSession(sessionId, previseSessionId, response);
     }
 }

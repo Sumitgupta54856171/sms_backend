@@ -2,11 +2,11 @@ package com.example.schoolsystem.controller;
 
 import com.example.schoolsystem.entity.ExanGrade;
 import com.example.schoolsystem.entity.TestGrade;
+import com.example.schoolsystem.service.Gradeservice;
+import com.example.schoolsystem.util.SessionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.example.schoolsystem.service.Gradeservice;
 
 import java.util.List;
 
@@ -17,23 +17,35 @@ public class Gradecontroller {
     private final Gradeservice gradeservice;
 
     @PostMapping("/exam/mark/save")
-    public ResponseEntity<?> saveGrade(@RequestBody List<ExanGrade> examGrade,@CookieValue("sessionId")String sessionId) {
+    public ResponseEntity<?> saveGrade(@RequestBody List<ExanGrade> examGrade, @CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId) {
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
         Long sessionid = Long.parseLong(sessionId);
-        return gradeservice.saveexammark(examGrade,sessionid);
+        return gradeservice.saveexammark(examGrade, sessionid);
     }
     @PostMapping("/test/mark/save")
     public ResponseEntity<?> savetestGrade(@RequestBody List<TestGrade> testGrade){
         return gradeservice.savemark(testGrade);
     }
     @GetMapping("/get/mark/{teacherId}/{subject}/{grade}/{type}/{examid}")
-    public ResponseEntity<?> getGrade(@PathVariable Long teacherId, @PathVariable String subject, @PathVariable String grade, @PathVariable String type,@CookieValue("sessionId") String sessionId,@PathVariable("examid")Long examid){
+    public ResponseEntity<?> getGrade(@PathVariable Long teacherId, @PathVariable String subject, @PathVariable String grade, @PathVariable String type, @CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId, @PathVariable("examid") Long examid){
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
         Long id = Long.parseLong(sessionId);
-        return gradeservice.getgrade(id,teacherId,subject,examid,type,grade);
+        return gradeservice.getgrade(id, teacherId, subject, examid, type, grade);
     }
     @GetMapping("/get/mark/{classNo}/{testname}/{checkmark}")
-    public ResponseEntity<?> getTestGrade(@PathVariable String classNo, @PathVariable String testname, @PathVariable String checkmark,@CookieValue("sessionId") String sessionId){
+    public ResponseEntity<?> getTestGrade(@PathVariable String classNo, @PathVariable String testname, @PathVariable String checkmark, @CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId){
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
         Long id = Long.parseLong(sessionId);
-        return gradeservice.getMarkbyclassandsession(classNo,testname,id,checkmark);
+        return gradeservice.getMarkbyclassandsession(classNo, testname, id, checkmark);
     }
     
 }

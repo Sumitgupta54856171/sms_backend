@@ -6,6 +6,7 @@ import com.example.schoolsystem.entity.TestTimetable;
 import com.example.schoolsystem.service.Examservice;
 import com.example.schoolsystem.service.Gradeservice;
 import com.example.schoolsystem.service.Testservice;
+import com.example.schoolsystem.util.SessionUtil;
 import lombok.RequiredArgsConstructor;
 
 import org.apache.coyote.Response;
@@ -23,17 +24,30 @@ public class Timetable {
     private final Gradeservice gradeservice;
 
     @PostMapping("/savetesttimetable")
-    public ResponseEntity<?> savetesttimetable(@RequestBody List<TestTimetable> testTimetable, @CookieValue("sessionId") Long sessionId){
-        return testservice.savetesttimetable(testTimetable, sessionId);
+    public ResponseEntity<?> savetesttimetable(@RequestBody List<TestTimetable> testTimetable, @CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId){
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
+        Long id = Long.parseLong(sessionId);
+        return testservice.savetesttimetable(testTimetable, id);
     }
 
     @GetMapping("/test-timetable/{classNO}/{testName}")
-    public ResponseEntity<?> gettesttimetable(String classNo,String testName,@CookieValue("sessionId") String sessionId){
+    public ResponseEntity<?> gettesttimetable(String classNo, String testName, @CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId){
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
         Long id = Long.parseLong(sessionId);
-        return testservice.gettimetable(classNo,testName,id);
+        return testservice.gettimetable(classNo, testName, id);
     }
     @GetMapping("/testName")
-    public ResponseEntity<?> getTestName(@CookieValue("sessionId") String sessionId){
+    public ResponseEntity<?> getTestName(@CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId){
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
         Long id = Long.parseLong(sessionId);
         return testservice.getTestName(id);
     }
@@ -43,17 +57,30 @@ public class Timetable {
     }
     
     @PostMapping("/saveexamtimetable")
-    public ResponseEntity<?> saveexamtimetable(@RequestBody List<ExamTimeTable> examTimeTable, @CookieValue("sessionId") Long sessionId){
-        return examservice.saveexamtimetable(examTimeTable, sessionId);
+    public ResponseEntity<?> saveexamtimetable(@RequestBody List<ExamTimeTable> examTimeTable, @CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId){
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
+        Long id = Long.parseLong(sessionId);
+        return examservice.saveexamtimetable(examTimeTable, id);
     }
 
     @GetMapping("/exam-timetable/{classNO}/{examName}")
-    public ResponseEntity<?> getexamtimetable(String classNo,String examName,@CookieValue("sessionId") String sessionId){
+    public ResponseEntity<?> getexamtimetable(String classNo, String examName, @CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId){
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
         Long id = Long.parseLong(sessionId);
-        return examservice.getexamtimetable(classNo,examName,id);
+        return examservice.getexamtimetable(classNo, examName, id);
     }
     @GetMapping("/examName")
-    public ResponseEntity<?> getExamName(@CookieValue("sessionId") String sessionId){
+    public ResponseEntity<?> getExamName(@CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId){
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
         Long id = Long.parseLong(sessionId);
         return examservice.getExamName(id);
     }
@@ -62,9 +89,13 @@ public class Timetable {
         return examservice.getExamByName(examName);
     }
     @GetMapping("/grade/fill/{teacherId}/{timetableid}/{type}")
-    public ResponseEntity<?> getmarkfill(@PathVariable("teacherId") Long teacherId, @PathVariable("timetableid") Long timetableid, @PathVariable("type") String type,@CookieValue("sessionId") String sessionId){
+    public ResponseEntity<?> getmarkfill(@PathVariable("teacherId") Long teacherId, @PathVariable("timetableid") Long timetableid, @PathVariable("type") String type, @CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId){
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
         Long id = Long.parseLong(sessionId);
-        return gradeservice.getgradefillbyteacherId(teacherId, timetableid,id,type);
+        return gradeservice.getgradefillbyteacherId(teacherId, timetableid, id, type);
     }
     @DeleteMapping("/testtime/{testId}")
     public ResponseEntity<?> deletetesttime(@PathVariable Long testId) {

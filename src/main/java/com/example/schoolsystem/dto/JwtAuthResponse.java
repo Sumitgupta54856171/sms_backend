@@ -7,5 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class JwtAuthResponse {
     private String token;
-    private String role; // React ko pata hona chahiye ki user Admin hai ya Teacher
+    private String role;
+    private Long sessionId;// React ko pata hona chahiye ki user Admin hai ya Teacher
 }

@@ -42,6 +42,7 @@ public  class Userservice {
     public ResponseEntity<JwtAuthResponse> login(LoginRequest loginRequest, HttpServletResponse response) throws Exception {
 
         System.out.println("start login");
+
         User checkrole = userrepo.findByEmail(loginRequest.getEmail());
         if(checkrole == null){
             throw new UsernameNotFoundException("User with this email does not exist. Please check your email or register.");
@@ -93,11 +94,12 @@ public  class Userservice {
 
                 return ResponseEntity.ok()
                         .header(HttpHeaders.SET_COOKIE, sessionCookie.toString(), classCookie.toString(), roleCookie.toString())
-                        .body(new JwtAuthResponse(jwt, role));
+                        .body(new JwtAuthResponse(jwt, role,sessionId));
             }
+            Long sessionId = e.get().getSessionId();
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, classCookie.toString(), roleCookie.toString())
-                    .body(new JwtAuthResponse(jwt, role));
+                    .body(new JwtAuthResponse(jwt, role,sessionId));
 
         }
         else if(rolecheck == Role.ACCOUNTANT){
@@ -131,11 +133,12 @@ public  class Userservice {
 
                 return ResponseEntity.ok()
                         .header(HttpHeaders.SET_COOKIE, sessionCookie.toString(), roleCookie.toString())
-                        .body(new JwtAuthResponse(jwt, role));
+                        .body(new JwtAuthResponse(jwt, role,sessionId));
             }
+            Long sessionId = e.get().getSessionId();
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, roleCookie.toString())
-                    .body(new JwtAuthResponse(jwt, role));
+                    .body(new JwtAuthResponse(jwt, role,sessionId));
 
         }
         else if(rolecheck == Role.ADMIN){
@@ -169,11 +172,12 @@ public  class Userservice {
 
                 return ResponseEntity.ok()
                         .header(HttpHeaders.SET_COOKIE, sessionCookie.toString(), roleCookie.toString())
-                        .body(new JwtAuthResponse(jwt, role));
+                        .body(new JwtAuthResponse(jwt, role,sessionId));
             }
+            Long sessionId = e.get().getSessionId();
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, roleCookie.toString())
-                    .body(new JwtAuthResponse(jwt, role));
+                    .body(new JwtAuthResponse(jwt, role,sessionId));
 
         }
 
@@ -206,11 +210,12 @@ public  class Userservice {
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, sessionCookie.toString(), roleCookie.toString())
-                    .body(new JwtAuthResponse(jwt, role));
+                    .body(new JwtAuthResponse(jwt, role,sessionId));
         }
+        Long sessionId = e.get().getSessionId();
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, roleCookie.toString())
-                .body(new JwtAuthResponse(jwt, role));
+                .body(new JwtAuthResponse(jwt, role,sessionId));
     }
 
     public String logout(){

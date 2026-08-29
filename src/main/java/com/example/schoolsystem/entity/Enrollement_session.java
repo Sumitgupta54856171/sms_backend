@@ -39,8 +39,8 @@ public class Enrollement_session {
     @Column
     private String roll_no;
 
-    @Column(nullable = false,columnDefinition = "biginit default 0")
-    private Long total_fees=0L;
+    @Column(nullable = false, columnDefinition = "bigint default 0")
+    private Long total_fees = 0L;
 
     @Column(nullable = false, columnDefinition = "bigint default 0")
     private Long dueFees = 0L;

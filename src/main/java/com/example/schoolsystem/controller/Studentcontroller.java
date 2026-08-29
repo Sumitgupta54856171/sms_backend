@@ -12,6 +12,7 @@ import com.example.schoolsystem.service.PhotoService;
 import com.example.schoolsystem.service.Studentportaservice;
 import com.example.schoolsystem.service.Studentservice;
 import com.example.schoolsystem.service.StudetnOpertionservice;
+import com.example.schoolsystem.util.SessionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,13 +38,18 @@ public class Studentcontroller {
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody Studentdto studentdto, @CookieValue(value = "sessionId") String id) throws Exception {
-        Long sessionId = Long.parseLong(id);
-        return studentservice.saveStudentData(studentdto, sessionId);
+    public ResponseEntity<?> save(@RequestBody Studentdto studentdto, @CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId) throws Exception {
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
+        Long id = Long.parseLong(sessionId);
+        return studentservice.saveStudentData(studentdto, id);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> fetchStudentData(@CookieValue(value = "sessionId", required = false) String sessionId) throws Exception {
+    public ResponseEntity<?> fetchStudentData(@CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId) throws Exception {
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
         if (sessionId == null) {
             return ResponseEntity.badRequest().body("Session ID is required");
         }
@@ -88,21 +94,34 @@ public class Studentcontroller {
         }
     }
     @GetMapping("/class/v1/{classno}")
-    public ResponseEntity<?> getStudentByClass(@PathVariable("classno") String classno,@CookieValue("sessionId")String sessionid){
+    public ResponseEntity<?> getStudentByClass(@PathVariable("classno") String classno, @CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId){
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
         System.out.println("class no is "+classno);
-        Long sessionId = Long.parseLong(sessionid);
-        return studentservice.getStudentbyclass(classno,sessionId);
+        Long id = Long.parseLong(sessionId);
+        return studentservice.getStudentbyclass(classno, id);
     }
 
     @GetMapping("/class/{class}")
-    public ResponseEntity<?> getStudentByClassAndSessionId(@PathVariable("class") String class_no, @CookieValue(value = "sessionId", required = false) String sessionId){
+    public ResponseEntity<?> getStudentByClassAndSessionId(@PathVariable("class") String class_no, @CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId){
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
         Long sessionId1 = Long.parseLong(sessionId);
-        return studentservice.getStudentByClassAndSessionId(class_no,sessionId1);
+        return studentservice.getStudentByClassAndSessionId(class_no, sessionId1);
     }
 
     @PostMapping("/promote")
-    public ResponseEntity<?> promoteStudent(@RequestBody List<EnrollmentRequestDto> enrollmentRequestDto, @CookieValue("sessionId") Long sessionId){
-        return ResponseEntity.ok(studetnOpertionservice.saveeEnrollment(enrollmentRequestDto,sessionId));
+    public ResponseEntity<?> promoteStudent(@RequestBody List<EnrollmentRequestDto> enrollmentRequestDto, @CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId){
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
+        Long id = Long.parseLong(sessionId);
+        return ResponseEntity.ok(studetnOpertionservice.saveeEnrollment(enrollmentRequestDto, id));
     }
 
     @PutMapping("/update/student-detail")
@@ -134,22 +153,33 @@ public class Studentcontroller {
         return ResponseEntity.ok(photoService.deletphot(studentId, null));
     }
     @GetMapping("/class/roll/no/{studentid}")
-    public  ResponseEntity<?> getclassandrollno(@PathVariable("studentid") Long studentid,@CookieValue("sessionId") String sessionId){
+    public  ResponseEntity<?> getclassandrollno(@PathVariable("studentid") Long studentid, @CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId){
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
         Long sessionid = Long.parseLong(sessionId);
-
-        return ResponseEntity.ok(studentservice.getclassandrollno(studentid,sessionid));
+        return ResponseEntity.ok(studentservice.getclassandrollno(studentid, sessionid));
     }
     @PutMapping("/update/roll/no")
-    public ResponseEntity<?> updateRollNo(@RequestBody List<UpdateRollNodto> updatelist, @CookieValue("sessionId") String sessionId){
+    public ResponseEntity<?> updateRollNo(@RequestBody List<UpdateRollNodto> updatelist, @CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId){
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
         Long sessionid = Long.parseLong(sessionId);
-        return ResponseEntity.ok(studentportaservice.updateRollNo(updatelist,sessionid));
+        return ResponseEntity.ok(studentportaservice.updateRollNo(updatelist, sessionid));
     }
     @PostMapping("/save/elective/subject")
     public ResponseEntity<?> saveelective(List<ElectSubject> electSubjects){
         return  ResponseEntity.ok(studetnOpertionservice.savesubject(electSubjects));
     }
     @GetMapping("/get/elective/subject")
-    public ResponseEntity<?> getelective(@CookieValue("sessionId") String sessionId){
+    public ResponseEntity<?> getelective(@CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId){
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
         Long id = Long.parseLong(sessionId);
         return ResponseEntity.ok(studetnOpertionservice.getelectsubject(id));
     }

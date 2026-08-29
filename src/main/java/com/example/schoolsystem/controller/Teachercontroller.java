@@ -7,6 +7,7 @@ import com.example.schoolsystem.entity.TeacherPlan;
 import com.example.schoolsystem.entity.User;
 import com.example.schoolsystem.service.PhotoService;
 import com.example.schoolsystem.service.Teacherservice;
+import com.example.schoolsystem.util.SessionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,18 +48,25 @@ public class Teachercontroller {
         return teacherservice.updateteacher(teacher);
     }
     @GetMapping("/get/teacher/class")
-    public ResponseEntity<?> getteacherclass(@CookieValue("teacherId") String te,@CookieValue("sessionId") String  sessionId)
+    public ResponseEntity<?> getteacherclass(@CookieValue("teacherId") String te, @CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId)
     {
-        Long id  = Long.parseLong(sessionId);
+        String sessionId = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (sessionId == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
+        Long id = Long.parseLong(sessionId);
         Long teacherId = Long.parseLong(te);
-        return teacherservice.getclassofclassteacher(teacherId,id);
+        return teacherservice.getclassofclassteacher(teacherId, id);
     }
     @PostMapping("/teacher/plan/save")
-    public ResponseEntity<?> saveTeacherPlan(@RequestBody TeacherPlan teacherPlan,@CookieValue("sessionId")String session,@CookieValue("teacherId") String teacer){
+    public ResponseEntity<?> saveTeacherPlan(@RequestBody TeacherPlan teacherPlan, @CookieValue(value = "sessionId", required = false) String cookieSessionId, @RequestHeader(value = "X-Session-Id", required = false) String headerSessionId, @CookieValue("teacherId") String teacer){
+        String session = SessionUtil.extractSessionId(cookieSessionId, headerSessionId);
+        if (session == null) {
+            return ResponseEntity.badRequest().body("Session ID is required");
+        }
         Long id = Long.parseLong(session);
         Long id1 = Long.parseLong(teacer);
-        return ResponseEntity.ok(teacherservice.saveTeacherPlan(teacherPlan,id,id1));
-
+        return ResponseEntity.ok(teacherservice.saveTeacherPlan(teacherPlan, id, id1));
     }
     @GetMapping("/plan/{date}/{teacherId}")
     public ResponseEntity<?> getPlanbyTeacherid(@PathVariable("date")LocalDate date,@PathVariable("teacherId") Long teacherId){

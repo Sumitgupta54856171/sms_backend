@@ -85,7 +85,7 @@ public class Securityconfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Arrays.asList("https://lisa-issued-peaceful-earthquake.trycloudflare.com"));
+        corsConfiguration.setAllowedOrigins(Arrays.asList("http://100.102.150.51:5173/"));
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setAllowedMethods(Arrays.asList("*"));
         corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));

@@ -26,6 +26,13 @@ public class Sessionservice {
 
     public Session Savesession(Session session) throws Exception{
         System.out.println(session);
+        Optional<Session>  se = sessionrepo.findByIs_currentIsTrue(true);
+        if(se != null){
+            se.stream().map(e->{
+                e.set_current(false);
+                return null;
+            });
+        }
          session.set_active(false);
          session.set_current(true);
          return sessionrepo.save(session);
