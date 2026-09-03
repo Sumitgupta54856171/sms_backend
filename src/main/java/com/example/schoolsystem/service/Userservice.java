@@ -65,16 +65,16 @@ public  class Userservice {
             String gradeClass = cla.getGradeClass().replace(" ", "_");
            	ResponseCookie classCookie = ResponseCookie.from("teacherId",teacherdetail.getId().toString())
                     .path("/")
-                    .httpOnly(false)
-                    .secure(false)
-                    .sameSite("Lax")
+                    .httpOnly(true)
+                    .secure(true)
+                    .sameSite("None")
                     .build();
 
             ResponseCookie roleCookie = ResponseCookie.from("role", "TEACHER")
                     .path("/")
-                    .httpOnly(false)
-                    .secure(false)
-                    .sameSite("Lax")
+                    .httpOnly(true)
+                    .secure(true)
+                    .sameSite("None")
                     .build();
 
 
@@ -87,9 +87,9 @@ public  class Userservice {
 
                 ResponseCookie sessionCookie = ResponseCookie.from("sessionId", sessionId.toString())
                         .path("/")
-                        .httpOnly(false)
-                        .secure(false)
-                        .sameSite("Lax")
+                        .httpOnly(true)
+                        .secure(true)
+                        .sameSite("None")
                         .build();
 
                 return ResponseEntity.ok()
@@ -113,9 +113,9 @@ public  class Userservice {
 
             ResponseCookie roleCookie = ResponseCookie.from("role", "ACCOUNTANT")
                     .path("/")
-                    .httpOnly(false)
-                    .secure(false)
-                    .sameSite("Lax")
+                    .httpOnly(true)
+                    .secure(true)
+                    .sameSite("None")
                     .build();
 
             if (e.isPresent()) {
@@ -126,9 +126,9 @@ public  class Userservice {
 
                 ResponseCookie sessionCookie = ResponseCookie.from("sessionId", sessionId.toString())
                         .path("/")
-                        .httpOnly(false)
-                        .secure(false)
-                        .sameSite("Lax")
+                        .httpOnly(true)
+                        .secure(true)
+                        .sameSite("None")
                         .build();
 
                 return ResponseEntity.ok()
@@ -152,9 +152,9 @@ public  class Userservice {
 
             ResponseCookie roleCookie = ResponseCookie.from("role", "ADMIN")
                     .path("/")
-                    .httpOnly(false)
-                    .secure(false)
-                    .sameSite("Lax")
+                    .httpOnly(true)
+                    .secure(true)
+                    .sameSite("None")
                     .build();
 
             if (e.isPresent()) {
@@ -165,9 +165,9 @@ public  class Userservice {
 
                 ResponseCookie sessionCookie = ResponseCookie.from("sessionId", sessionId.toString())
                         .path("/")
-                        .httpOnly(false)
-                        .secure(false)
-                        .sameSite("Lax")
+                        .httpOnly(true)
+                        .secure(true)
+                        .sameSite("None")
                         .build();
 
                 return ResponseEntity.ok()
@@ -190,9 +190,9 @@ public  class Userservice {
 
         ResponseCookie roleCookie = ResponseCookie.from("role", role)
                 .path("/")
-                .httpOnly(false)
-                .secure(false)
-                .sameSite("Lax")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
                 .build();
 
         if (e.isPresent()) {
@@ -203,9 +203,9 @@ public  class Userservice {
 
             ResponseCookie sessionCookie = ResponseCookie.from("sessionId", sessionId.toString())
                     .path("/")
-                    .httpOnly(false)
-                    .secure(false)
-                    .sameSite("Lax")
+                    .httpOnly(true)
+                    .secure(true)
+                    .sameSite("None")
                     .build();
 
             return ResponseEntity.ok()
