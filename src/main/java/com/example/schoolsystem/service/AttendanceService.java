@@ -39,7 +39,7 @@ public class AttendanceService {
     public ResponseEntity<?> saveAttendance(List<AttendanceRequestDTO> attendanceRequests, Long sessionId) {
         for (AttendanceRequestDTO request : attendanceRequests) {
             if (attendanceRepository.existsByStudentIdAndAttendanceDate(request.getStudentId(), request.getAttendanceDate())) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Attendance already exists for student ID " + request.getStudentId() + " on " + request.getAttendanceDate());
+               continue;
             }
             System.out.println("Attendance date: " + request.getAttendanceDate() + " Status: " + request.getStatus() + " Student ID: " + request.getStudentId() + " check the grade " + request.getGrade());
 
